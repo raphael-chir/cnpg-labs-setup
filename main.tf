@@ -1,0 +1,56 @@
+# ----------------------------------------
+#            Main module
+# ----------------------------------------
+
+# Shared tfstate
+terraform {
+  backend "s3" {
+    region = "eu-west-1"
+    key    = "ec2-instances-tfstate"
+    bucket = "atfstate-rchir"
+  }
+}
+
+# Provider config
+provider "aws" {
+  region = var.region_target
+}
+
+# Create key-pair for logging into ec2 instance
+resource "aws_key_pair" "this" {
+  key_name   = var.key_pair_name
+  public_key = file(var.ssh_public_key_path)
+  tags = {
+    Name        = join("-",["key-pair", var.resource_tags["project"],var.resource_tags["environment"]])
+    Project     = var.resource_tags["project"]
+    Owner       = var.resource_tags["owner"]
+    Environment = var.resource_tags["environment"]
+  }
+} 
+
+# Call network module
+module "network" {
+  source                  = "./modules/network"
+  resource_tags           = var.resource_tags
+  vpc_cidr_block          = var.vpc_cidr_block
+  public_subnet_cidr_block = var.public_subnet_cidr_block
+  ingress_rules          = var.ingress-rules
+}
+
+# Call compute module
+module "node" {
+  source                 = "./modules/compute"
+  count                  = var.number_of_instances
+  depends_on             = [module.network]
+  resource_tags          = var.resource_tags
+  base_name              = "${format("%02d", count.index + 1)}"
+  ami_id                 = var.ami_id
+  instance_type          = var.instance_type
+  user_data_script_path  = "scripts/init.sh"
+  user_data_args         = tomap({})
+  ssh_public_key_name    = aws_key_pair.this.key_name
+  vpc_security_group_ids = module.network.vpc_security_group_ids
+  subnet_id              = module.network.subnet_id
+  volume_size            = var.volume_size
+  volume_type            = var.volume_type
+}

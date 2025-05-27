@@ -1,0 +1,27 @@
+# ----------------------------------------
+#        Compute module Main
+# ----------------------------------------
+
+
+# Create ec2 instance
+resource "aws_instance" "this" {
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  key_name                    = var.ssh_public_key_name
+  associate_public_ip_address = true
+  vpc_security_group_ids      = var.vpc_security_group_ids
+  subnet_id                   = var.subnet_id
+  user_data = templatefile(var.user_data_script_path, var.user_data_args)
+  tags = {
+    Name        = join("-",[var.base_name, var.resource_tags["project"],var.resource_tags["environment"]])
+    Project     = var.resource_tags["project"]
+    Owner       = var.resource_tags["owner"]
+    Environment = var.resource_tags["environment"]
+  }
+  root_block_device {
+    volume_size           = var.volume_size
+    volume_type           = var.volume_type
+    delete_on_termination = true
+    encrypted             = true
+  }
+}

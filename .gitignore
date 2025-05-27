@@ -1,0 +1,5 @@
+# Files and directories
+.terraform/
+.ssh/
+.terraform.lock.hcl
+terraform.tfvars
