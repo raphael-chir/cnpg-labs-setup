@@ -116,7 +116,7 @@ ingress-rules = [
 number_of_instances = 1 # The number of VM to create
 instance_type = "t3.medium"
 volume_type = "gp3"
-volume_size = "16"
+volume_size = "24"
 ami_id = "ami-03fd334507439f4d1" # Depend of the region
 ```
 
