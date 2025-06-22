@@ -110,11 +110,16 @@ ingress-rules = [
     port    = 3000
     proto   = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
+  },
+    {
+    port    = 8080
+    proto   = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 ]
 
 number_of_instances = 1 # The number of VM to create
-instance_type = "t3.medium"
+instance_type = "t3.xlarge"
 volume_type = "gp3"
 volume_size = "24"
 ami_id = "ami-03fd334507439f4d1" # Depend of the region
