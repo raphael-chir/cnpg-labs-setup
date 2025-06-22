@@ -71,7 +71,7 @@ kubectl create secret generic minio-creds \
 helm repo add prometheus-community \
   https://prometheus-community.github.io/helm-charts
 
-helm upgrade --install --namespace cnpg-prom --create-namespace \
+helm upgrade --install --namespace monitoring --create-namespace \
   -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/docs/src/samples/monitoring/kube-stack-config.yaml \
   prometheus-community \
   prometheus-community/kube-prometheus-stack
@@ -94,5 +94,3 @@ chown ubuntu:ubuntu /home/ubuntu/.tmux.conf
 setcap 'cap_net_bind_service=+ep' /usr/bin/ttyd
 sudo -u ubuntu tmux new-session -d -s ttyd-session -c /home/ubuntu
 sudo -u ubuntu bash -c 'nohup /usr/bin/ttyd -p 80 -W tmux attach -t ttyd-session > /home/ubuntu/ttyd.log 2>&1 &'
-
-
