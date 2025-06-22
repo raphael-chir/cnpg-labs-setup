@@ -111,7 +111,7 @@ ingress-rules = [
     proto   = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
   },
-    {
+  {
     port    = 8080
     proto   = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
