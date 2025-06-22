@@ -148,7 +148,17 @@ To access urls, ssh command
 ```
 terraform output
 ```
-
+To control your ec2 instances on terminal
+```
+aws ec2 describe-instances   --region eu-west-1   --query 'Reservations[*].Instances[*].[
+    Tags[?Key==`Name`] | [0].Value,
+    State.Name,
+    PrivateIpAddress,
+    PublicIpAddress,
+    PublicDnsName,
+    Tags[?Key==`Owner`] | [0].Value
+  ]'   --output table
+```
 ## Notes
 
 The labs attendees access to their environment with a web browser.
@@ -157,7 +167,4 @@ The labs attendees access to their environment with a web browser.
 - On port 9090 : Prometheus
 - On port 3000 : Grafana
 
-Follow the instructions on [this workshop](https://github.com/raphael-chir/cnpg-ha)
-
-
-
+Follow the instructions on [this workshop](https://github.com/raphael-chir/cnpg-ha)  
